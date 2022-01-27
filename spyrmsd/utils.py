@@ -21,8 +21,13 @@ def format(fname: str) -> str:
     -----
     The file extension is returned without the `.` character, i.e. for the file
     `path/filename.ext` the string `ext` is returned.
+
+    If a file is compressed, the `.gz` extension is ignored.
     """
     name, ext = os.path.splitext(fname)
+
+    if ext == ".gz":
+        _, ext = os.path.splitext(name)
 
     return ext[1:]  # Remove "."
 
@@ -59,7 +64,7 @@ def molformat(fname: str) -> str:
 
     if ext == "xyz":
         # xyz files in OpenBabel are called XYZ
-        ext = ext.upper()
+        ext = "XYZ"
 
     return ext
 
@@ -82,7 +87,9 @@ def deg_to_rad(angle: float) -> float:
     return angle * np.pi / 180.0
 
 
-def rotate(v: np.array, angle: float, axis: np.array, units: str = "rad") -> np.array:
+def rotate(
+    v: np.ndarray, angle: float, axis: np.ndarray, units: str = "rad"
+) -> np.ndarray:
     """
     Rotate vector.
 

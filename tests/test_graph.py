@@ -1,8 +1,28 @@
 import numpy as np
 import pytest
 
-from spyrmsd import graph, io, molecule
+from spyrmsd import constants, graph, io, molecule
 from tests import molecules
+
+
+def test_adjacency_matrix_from_atomic_coordinates_distance() -> None:
+    # Lithium hydride (LiH)
+    # H and Li have very different covalent radii
+    atomicnums = np.array([1, 3])
+
+    # Distance is the sum of covalent radii
+    d = sum([constants.anum_to_covalentradius[anum] for anum in atomicnums])
+
+    # Distance between two atoms is barely enough to create a bond
+    # If the covalent radii are not correct, no bond will be created
+    coordinates = np.array(
+        [[0, 0, 0], [0, 0, d + constants.connectivity_tolerance - 0.01]]
+    )
+
+    A = graph.adjacency_matrix_from_atomic_coordinates(atomicnums, coordinates)
+    G = graph.graph_from_adjacency_matrix(A)
+
+    assert graph.num_edges(G) == 1
 
 
 @pytest.mark.parametrize(
@@ -30,7 +50,7 @@ def test_adjacency_matrix_from_mol(mol) -> None:
     A = io.adjacency_matrix(mol)
 
     assert A.shape == (natoms, natoms)
-    assert np.alltrue(A == A.T)
+    assert np.all(A == A.T)
     assert np.sum(A) == nbonds * 2
 
     for i, j in io.bonds(mol):
@@ -47,7 +67,7 @@ def test_graph_from_adjacency_matrix(mol) -> None:
     A = io.adjacency_matrix(mol)
 
     assert A.shape == (natoms, natoms)
-    assert np.alltrue(A == A.T)
+    assert np.all(A == A.T)
     assert np.sum(A) == nbonds * 2
 
     G = graph.graph_from_adjacency_matrix(A)
@@ -68,7 +88,7 @@ def test_graph_from_adjacency_matrix_atomicnums(rawmol, mol) -> None:
 
     assert len(mol) == natoms
     assert mol.adjacency_matrix.shape == (natoms, natoms)
-    assert np.alltrue(mol.adjacency_matrix == A)
+    assert np.all(mol.adjacency_matrix == A)
     assert np.sum(mol.adjacency_matrix) == nbonds * 2
 
     G = mol.to_graph()
@@ -89,7 +109,9 @@ def test_graph_from_adjacency_matrix_atomicnums(rawmol, mol) -> None:
 )
 def test_match_graphs_isomorphic(G1, G2) -> None:
 
-    with pytest.warns(UserWarning):
+    with pytest.warns(
+        UserWarning, match="No atomic number information stored on nodes."
+    ):
         isomorphisms = graph.match_graphs(G1, G2)
 
     assert len(isomorphisms) != 0
@@ -104,5 +126,7 @@ def test_match_graphs_isomorphic(G1, G2) -> None:
 )
 def test_match_graphs_not_isomorphic(G1, G2) -> None:
 
-    with pytest.raises(ValueError), pytest.warns(UserWarning):
+    with pytest.raises(ValueError, match="Graphs are not isomorphic."), pytest.warns(
+        UserWarning, match="No atomic number information stored on nodes."
+    ):
         graph.match_graphs(G1, G2)

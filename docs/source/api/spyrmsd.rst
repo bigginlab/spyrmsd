@@ -21,11 +21,12 @@ Submodules
 .. toctree::
    :maxdepth: 4
 
+   spyrmsd.constants
+   spyrmsd.due
    spyrmsd.graph
    spyrmsd.hungarian
    spyrmsd.io
    spyrmsd.molecule
    spyrmsd.qcp
    spyrmsd.rmsd
-   spyrmsd.spyrmsd
    spyrmsd.utils
