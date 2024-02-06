@@ -3,9 +3,70 @@
 
 ------------------------------------------------------------------------------
 
-## Version 0.5.x
+## Version X.Y.Z
 
-Date:            XX/YY/20ZZ
+Date:            XX/YY/ZZZZ
+Contributors:    @RMeli, @takluyver
+
+### Fixed
+
+* Failing tests with `pytest=8.0.0` [PR #101 | @RMeli]
+
+### Changed
+
+* Updated Python build system to use flit_core directly [PR #103 | @takluyver]
+* Minimum version of Python to `3.9` (to reduce CI matrix) [PR  #102 | @RMeli]
+
+### Improved
+
+* Messages for `NotImplementedError` exceptions [PR #90 | @RMeli]
+
+### Added
+
+* Python `3.12` to CI [PR  #102 | @RMeli]
+* macOS M1 (`macoOS-14`) to CI [PR  #102 | @RMeli]
+
+### Removed
+
+* `.gitattributes` and `.lgtm.yaml` stale files
+* `versioneer` [PR #91 | @RMeli]
+
+## Version 0.6.0
+
+Date:            08/09/2023
+Contributors:    @RMeli
+
+### Improved
+
+* Documentation on loading RDKit and Open Babel molecules [PR #77 | @RMeli]
+
+### Changed
+
+* Versions of `pre-commit` hooks tools [PR #85 | @RMeli]
+* Version of several GitHub actions [PR #76 | @RMeli]
+* Versioneer to `0.28` [PR #76 | @RMeli]
+* Minimum Python version to `3.7` to match CI [PR #76 | @RMeli]
+* Code according to `black==23.3.0` [PR #76 | @RMeli]
+
+### Added
+
+* `pre-commit` CI action [PR #85 | @RMeli]
+* `extras_require` to `setup.py` for RDKit and Open Babel [PR #84 | @RMeli]
+* Error message when `spyrmsd` is used as module but neither OpenBabel nor RDKit are installed [PR #81 | @RMeli]
+* Pin to `sphinx<7` to avoid compatibility with RTD theme [PR #77 | @RMeli]
+
+### Removed
+
+* `ubuntu-latest-3.7-rdkit-gt` configuration from CI due to continuous failures [PR #84 | @RMeli]
+* Outdated information about RDKit from the documentation [PR #84 | @RMeli]
+* Support for Open Babel 2 [PR #84 | @RMeli]
+* LGTM badge and code annotations [PR #76 | @RMeli]
+
+------------------------------------------------------------------------------
+
+## Version 0.5.2
+
+Date:            23/02/2022
 Contributors:    @RMeli
 
 ### Fixed
@@ -15,6 +76,10 @@ Contributors:    @RMeli
 ### Improved
 
 * Support for more types of node properties (including strings) with `graph-tool` [PR #64 | @RMeli]
+
+### Changed
+
+* `ValueError` exception into `NonIsomorphicGraphs(ValueError)` exception [PR #65 | @RMeli]
 
 ### Added
 

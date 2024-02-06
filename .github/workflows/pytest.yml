@@ -24,15 +24,18 @@ jobs:
     strategy:
       matrix:
         os: [macOS-latest, ubuntu-latest, windows-latest]
-        python-version: [3.7, 3.8, 3.9]
+        python-version: ["3.9", "3.10", "3.11", "3.12"]
         chemlib: [obabel, rdkit]
         graphlib: [nx, gt]
-        # graph-tools does not work on Windows
         exclude:
+        # graph-tools does not work on Windows
         - {os: "windows-latest", graphlib: "gt"}
+        include:
+        - {os: "macOS-14", graphlib: "gt", chemlib: "obabel", python-version: "3.12"}
+        - {os: "macOS-14", graphlib: "nx", chemlib: "rdkit", python-version: "3.12"}
 
     steps:
-    - uses: actions/checkout@v1
+    - uses: actions/checkout@v3
 
     - name: Info
       shell: bash
@@ -41,12 +44,14 @@ jobs:
         df -h
         ulimit -a
 
-    - uses: conda-incubator/setup-miniconda@v2
+    - uses: conda-incubator/setup-miniconda@v3
       with:
         python-version: ${{ matrix.python-version }}
         environment-file: devtools/conda-envs/spyrmsd-test-${{ matrix.chemlib }}-${{ matrix.graphlib }}.yaml
-        channels: conda-forge,defaults
+        miniforge-version: "latest"
         activate-environment: spyrmsd
+        miniforge-variant: Mambaforge
+        use-mamba: true
         auto-update-conda: true
         auto-activate-base: false
         show-channel-urls: true
@@ -54,14 +59,15 @@ jobs:
     - name: Install
       run: |
         python -m pip install . --no-deps
-        conda list
+        mamba info
+        mamba list
 
     - name: Test
       run: |
         pytest -v --benchmark --cov=spyrmsd --cov-report=xml --color=yes tests/
 
     - name: CodeCov
-      uses: codecov/codecov-action@v1
+      uses: codecov/codecov-action@v3
       with:
         file: ./coverage.xml
         flags: unittests

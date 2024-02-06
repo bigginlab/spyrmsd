@@ -5,6 +5,7 @@ channels:
 dependencies:
   # Base
   - python
+  - setuptools
 
   # Maths
   - numpy
@@ -17,5 +18,5 @@ dependencies:
   - rdkit
 
   # Doc
-  - sphinx
+  - sphinx<7
   - sphinx_rtd_theme

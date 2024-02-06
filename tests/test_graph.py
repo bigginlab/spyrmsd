@@ -2,6 +2,8 @@ import numpy as np
 import pytest
 
 from spyrmsd import constants, graph, io, molecule
+from spyrmsd.exceptions import NonIsomorphicGraphs
+from spyrmsd.graphs import _common as gc
 from tests import molecules
 
 
@@ -32,7 +34,6 @@ def test_adjacency_matrix_from_atomic_coordinates_distance() -> None:
 def test_adjacency_matrix_from_atomic_coordinates(
     mol: molecule.Molecule, n_bonds: int
 ) -> None:
-
     A = graph.adjacency_matrix_from_atomic_coordinates(mol.atomicnums, mol.coordinates)
 
     G = graph.graph_from_adjacency_matrix(A)
@@ -43,7 +44,6 @@ def test_adjacency_matrix_from_atomic_coordinates(
 
 @pytest.mark.parametrize("mol", molecules.allobmolecules)
 def test_adjacency_matrix_from_mol(mol) -> None:
-
     natoms = io.numatoms(mol)
     nbonds = io.numbonds(mol)
 
@@ -54,13 +54,11 @@ def test_adjacency_matrix_from_mol(mol) -> None:
     assert np.sum(A) == nbonds * 2
 
     for i, j in io.bonds(mol):
-
         assert A[i, j] == 1
 
 
 @pytest.mark.parametrize("mol", molecules.allobmolecules)
 def test_graph_from_adjacency_matrix(mol) -> None:
-
     natoms = io.numatoms(mol)
     nbonds = io.numbonds(mol)
 
@@ -80,7 +78,6 @@ def test_graph_from_adjacency_matrix(mol) -> None:
     "rawmol, mol", zip(molecules.allobmolecules, molecules.allmolecules)
 )
 def test_graph_from_adjacency_matrix_atomicnums(rawmol, mol) -> None:
-
     natoms = io.numatoms(rawmol)
     nbonds = io.numbonds(rawmol)
 
@@ -108,10 +105,7 @@ def test_graph_from_adjacency_matrix_atomicnums(rawmol, mol) -> None:
     ],
 )
 def test_match_graphs_isomorphic(G1, G2) -> None:
-
-    with pytest.warns(
-        UserWarning, match="No atomic property information stored on nodes."
-    ):
+    with pytest.warns(UserWarning, match=gc.warn_no_atomic_properties):
         isomorphisms = graph.match_graphs(G1, G2)
 
     assert len(isomorphisms) != 0
@@ -125,10 +119,9 @@ def test_match_graphs_isomorphic(G1, G2) -> None:
     ],
 )
 def test_match_graphs_not_isomorphic(G1, G2) -> None:
-
-    with pytest.raises(ValueError, match="Graphs are not isomorphic."), pytest.warns(
-        UserWarning, match="No atomic number information stored on nodes."
-    ):
+    with pytest.raises(
+        NonIsomorphicGraphs, match=gc.error_non_isomorphic_graphs
+    ), pytest.warns(UserWarning, match=gc.warn_no_atomic_properties):
         graph.match_graphs(G1, G2)
 
 
