@@ -6,25 +6,52 @@
 ## Version X.Y.Z
 
 Date:            XX/YY/ZZZZ
-Contributors:    @RMeli, @takluyver
+Contributors:    @RMeli
+
+### Added
+
+* Warnings filter for tests of multiple backends [PR #118 | @RMeli]
+* Parametrized fixture to run tests with all available backends [PR #118 | @RMeli]
+
+### Improved
+
+* Test IDs [PR #117 | @RMeli]
+
+### Changed
+
+* Location of backend tests to standalone file [PR #118 | @RMeli]
+
+### Removed
+
+* Many CI configurations in favour of running tests for all available backends [PR #118 | @RMeli]
+* `tests/molecule.py` in favour of fixtures [PR #118 | @RMeli]
+
+## Version 0.7.0
+
+Date:            05/04/2024
+Contributors:    @RMeli, @takluyver, @Jnelen
+
+### Added
+
+* Support for `rustworkx` graph library [PR #111 | @RMeli]
+* Functionality to manually select the backend from CLI [PR #108 | @RMeli]
+* Functionality to manually select the backend [PR  #107 | @Jnelen]
+* Python `3.12` to CI [PR  #102 | @RMeli]
+* macOS M1 (`macoOS-14`) to CI [PR  #102 | @RMeli]
+
+### Changed
+
+* Molecular graphs cache to cache by backend [PR  #107 | @Jnelen]
+* Python build system to use `flit_core` directly [PR #103 | @takluyver]
+* Minimum version of Python to `3.9` (to reduce CI matrix) [PR  #102 | @RMeli]
 
 ### Fixed
 
 * Failing tests with `pytest=8.0.0` [PR #101 | @RMeli]
 
-### Changed
-
-* Updated Python build system to use flit_core directly [PR #103 | @takluyver]
-* Minimum version of Python to `3.9` (to reduce CI matrix) [PR  #102 | @RMeli]
-
 ### Improved
 
 * Messages for `NotImplementedError` exceptions [PR #90 | @RMeli]
-
-### Added
-
-* Python `3.12` to CI [PR  #102 | @RMeli]
-* macOS M1 (`macoOS-14`) to CI [PR  #102 | @RMeli]
 
 ### Removed
 

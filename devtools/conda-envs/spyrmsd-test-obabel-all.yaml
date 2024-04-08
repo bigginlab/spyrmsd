@@ -4,12 +4,15 @@ channels:
 dependencies:
   # Base
   - python
+  - pip
   - setuptools
 
   # Maths
   - numpy
   - scipy
+  - graph-tool
   - networkx>=2
+  - rustworkx
 
   # Chemistry
   - openbabel
